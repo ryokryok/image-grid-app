@@ -1,0 +1,22 @@
+name: Frontend ci
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: [$default-branch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Format check
+        run: yarn format:check

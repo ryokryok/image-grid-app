@@ -1,74 +1,43 @@
 import goat from "./goat-square-profile.jpg";
+import {
+  A4,
+  defaultGap,
+  generatePosition,
+  defaultImageSize,
+  Size2D,
+} from "./lib/utils";
 
-type PaperSize = {
-  // mm scale
-  width: number;
-  height: number;
+type PrintSheetProps = {
+  paperSize: Size2D;
+  imageSize: Size2D;
+  gap: number;
 };
 
-const A4: PaperSize = {
-  width: 210,
-  height: 297,
-};
-
-const imageSize: PaperSize = {
-  width: 80,
-  height: 80,
-};
-
-const gap = 5;
-
-function App() {
-  const { width, height } = A4;
+function PrintSheet({ paperSize, imageSize, gap }: PrintSheetProps) {
+  const { width, height } = paperSize;
+  const imagePosition = generatePosition(paperSize, imageSize, gap);
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="white"
     >
-      <image
-        width={imageSize.width}
-        height={imageSize.height}
-        x={gap}
-        y={gap}
-        href={goat}
-      />
-      <image
-        width={imageSize.width}
-        height={imageSize.height}
-        x={gap}
-        y={imageSize.height + 2 * gap}
-        href={goat}
-      />
-      <image
-        width={imageSize.width}
-        height={imageSize.height}
-        x={gap}
-        y={imageSize.height * 2 + 3 * gap}
-        href={goat}
-      />
-      <image
-        width={imageSize.width}
-        height={imageSize.height}
-        x={gap + gap + imageSize.width}
-        y={gap}
-        href={goat}
-      />
-      <image
-        width={imageSize.width}
-        height={imageSize.height}
-        x={gap + gap + imageSize.width}
-        y={imageSize.height + 2 * gap}
-        href={goat}
-      />
-      <image
-        width={imageSize.width}
-        height={imageSize.height}
-        x={gap + gap + imageSize.width}
-        y={imageSize.height * 2 + 3 * gap}
-        href={goat}
-      />
+      {imagePosition.map(({ x, y }) => (
+        <image
+          width={imageSize.width}
+          height={imageSize.height}
+          x={x}
+          y={y}
+          href={goat}
+        />
+      ))}
     </svg>
+  );
+}
+
+function App() {
+  return (
+    <PrintSheet paperSize={A4} imageSize={defaultImageSize} gap={defaultGap} />
   );
 }
 

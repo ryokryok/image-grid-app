@@ -1,11 +1,11 @@
-import { useState, MouseEvent } from "react";
+import { useState } from "react";
+import { useFileUrl, usePopup } from "./lib/hooks";
 import {
   A4,
   defaultGap,
   generatePosition,
   defaultImageSize,
   Size2D,
-  Coordinate2D,
 } from "./lib/utils";
 
 type PrintSheetProps = {
@@ -22,21 +22,10 @@ function PrintSheet({
   const [gap, setGap] = useState(initialGap);
   const [imageSize, setImageSize] = useState(initialImageSize);
   const imagePosition = generatePosition(paperSize, imageSize, gap);
-  const [imageUrl, setImageUrl] = useState("https://picsum.photos/500");
 
-  const [open, setOpen] = useState(false);
-  const [clickPosition, setClickPosition] = useState<Coordinate2D>({
-    x: 0,
-    y: 0,
-  });
-  const toggleModal = (event: MouseEvent<SVGImageElement>) => {
-    setOpen(!open);
-    const { clientX, clientY } = event;
-    setClickPosition({
-      x: clientX,
-      y: clientY,
-    });
-  };
+  const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
+  const { open, position, toggle } = usePopup<SVGImageElement>();
+
   return (
     <div>
       {open ? (
@@ -46,8 +35,8 @@ function PrintSheet({
             position: "absolute",
             padding: "0.25rem 0.5rem",
             // offset for mouse cursor
-            top: clickPosition.y + 10,
-            left: clickPosition.x + 10,
+            top: position.y + 10,
+            left: position.x + 10,
           }}
         >
           <form>
@@ -99,15 +88,7 @@ function PrintSheet({
                 type="file"
                 name="imageFile"
                 id="imageFile"
-                onChange={(event) => {
-                  if (event.target.files) {
-                    URL.revokeObjectURL(imageUrl);
-                    const objectURL = URL.createObjectURL(
-                      event.target.files[0]
-                    );
-                    setImageUrl(objectURL);
-                  }
-                }}
+                onChange={fileHandler}
               />
             </div>
           </form>
@@ -128,7 +109,7 @@ function PrintSheet({
             x={x}
             y={y}
             href={imageUrl}
-            onClick={toggleModal}
+            onClick={toggle}
           />
         ))}
       </svg>

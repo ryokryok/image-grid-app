@@ -11,21 +11,28 @@ import {
 
 type PrintSheetProps = {
   paperSize: Size2D;
-  imageSize: Size2D;
-  gap: number;
+  initialImageSize: Size2D;
+  initialGap: number;
 };
 
-function PrintSheet({ paperSize, imageSize, gap }: PrintSheetProps) {
-  const { width, height } = paperSize;
-
+function PrintSheet({
+  paperSize,
+  initialImageSize,
+  initialGap,
+}: PrintSheetProps) {
+  const [gap, setGap] = useState(initialGap);
+  const [imageSize, setImageSize] = useState(initialImageSize);
   const imagePosition = generatePosition(paperSize, imageSize, gap);
 
   const [open, setOpen] = useState(false);
-  const [postion, setPostion] = useState<Coordinate2D>({ x: 0, y: 0 });
-  const handler = (event: MouseEvent<SVGImageElement>) => {
+  const [clickPosition, setClickPosition] = useState<Coordinate2D>({
+    x: 0,
+    y: 0,
+  });
+  const toggleModal = (event: MouseEvent<SVGImageElement>) => {
     setOpen(!open);
     const { clientX, clientY } = event;
-    setPostion({
+    setClickPosition({
       x: clientX,
       y: clientY,
     });
@@ -38,8 +45,9 @@ function PrintSheet({ paperSize, imageSize, gap }: PrintSheetProps) {
             backgroundColor: "Highlight",
             position: "absolute",
             padding: "0.25rem 0.5rem",
-            top: postion.y + 10,
-            left: postion.x + 10,
+            // offset for mouse cursor
+            top: clickPosition.y + 10,
+            left: clickPosition.x + 10,
           }}
         >
           <form>
@@ -50,6 +58,12 @@ function PrintSheet({ paperSize, imageSize, gap }: PrintSheetProps) {
                 name="imageWidth"
                 id="imageWidth"
                 value={imageSize.width}
+                onChange={(event) => {
+                  setImageSize({
+                    ...imageSize,
+                    width: Number(event.target.value),
+                  });
+                }}
               />
             </div>
             <div>
@@ -59,11 +73,25 @@ function PrintSheet({ paperSize, imageSize, gap }: PrintSheetProps) {
                 name="imageHeight"
                 id="imageHeight"
                 value={imageSize.height}
+                onChange={(event) => {
+                  setImageSize({
+                    ...imageSize,
+                    height: Number(event.target.value),
+                  });
+                }}
               />
             </div>
             <div>
               <label htmlFor="imageGap">Gap (mm)</label>
-              <input type="number" name="imageGap" id="imageGap" value={gap} />
+              <input
+                type="number"
+                name="imageGap"
+                id="imageGap"
+                value={gap}
+                onChange={(event) => {
+                  setGap(Number(event.target.value));
+                }}
+              />
             </div>
           </form>
         </div>
@@ -71,7 +99,7 @@ function PrintSheet({ paperSize, imageSize, gap }: PrintSheetProps) {
         <></>
       )}
       <svg
-        viewBox={`0 0 ${width} ${height}`}
+        viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="white"
       >
@@ -83,7 +111,7 @@ function PrintSheet({ paperSize, imageSize, gap }: PrintSheetProps) {
             x={x}
             y={y}
             href={goat}
-            onClick={handler}
+            onClick={toggleModal}
           />
         ))}
       </svg>
@@ -93,7 +121,11 @@ function PrintSheet({ paperSize, imageSize, gap }: PrintSheetProps) {
 
 function App() {
   return (
-    <PrintSheet paperSize={A4} imageSize={defaultImageSize} gap={defaultGap} />
+    <PrintSheet
+      paperSize={A4}
+      initialImageSize={defaultImageSize}
+      initialGap={defaultGap}
+    />
   );
 }
 

@@ -25,52 +25,63 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
       {open ? (
         <div
           style={{
-            backgroundColor: "Highlight",
+            backgroundColor: "#DDF",
+            padding: "0.5rem",
+            borderRadius: "0.5rem",
             position: "absolute",
-            padding: "0.25rem 0.5rem",
             // offset for mouse cursor
             top: position.y + 10,
             left: position.x + 10,
           }}
         >
           <form>
-            <div>
-              <label htmlFor="imageWidth">Width (mm) </label>
+            <div className="popup-form-item">
+              <label htmlFor="imageWidth" className="popup-label">
+                Width (mm)
+              </label>
               <input
                 type="number"
                 name="imageWidth"
                 id="imageWidth"
+                className="popup-input"
                 value={imageConfig.width}
                 onChange={widthHandler}
               />
             </div>
-            <div>
-              <label htmlFor="imageHeight"> Height (mm)</label>
+            <div className="popup-form-item">
+              <label htmlFor="imageHeight" className="popup-label">
+                {" "}
+                Height (mm)
+              </label>
               <input
                 type="number"
                 name="imageHeight"
                 id="imageHeight"
+                className="popup-input"
                 value={imageConfig.height}
                 onChange={heightHandler}
               />
             </div>
-            <div>
-              <label htmlFor="imageGap">Gap (mm)</label>
+            <div className="popup-form-item">
+              <label htmlFor="imageGap" className="popup-label">
+                Gap (mm)
+              </label>
               <input
                 type="number"
                 name="imageGap"
                 id="imageGap"
+                className="popup-input"
                 value={imageConfig.gap}
                 onChange={gapHandler}
               />
             </div>
             <div>
-              <label htmlFor="imageFile">Image</label>
               <input
                 type="file"
                 name="imageFile"
                 id="imageFile"
                 onChange={fileHandler}
+                accept="image/*"
               />
             </div>
           </form>

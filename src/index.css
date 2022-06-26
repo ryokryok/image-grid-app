@@ -37,4 +37,27 @@ svg {
     box-shadow: 2mm 2mm rgba(0, 0, 0, 0.4);
     margin-top: 5mm;
   }
+
+  .popup-form-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem;
+  }
+
+  .popup-label {
+    font-size: 1rem;
+    padding: 0rem 0.25rem;
+    font-family: sans-serif;
+    flex: auto;
+  }
+
+  .popup-input {
+    font-size: 1rem;
+    padding: 0.25rem;
+    font-family: sans-serif;
+    border: 1px solid gray;
+    border-radius: 0.25rem;
+    flex: initial;
+    max-width: 4rem;
+  }
 }

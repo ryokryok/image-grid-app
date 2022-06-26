@@ -1,5 +1,4 @@
 import { useState, MouseEvent } from "react";
-import goat from "./goat-square-profile.jpg";
 import {
   A4,
   defaultGap,
@@ -23,6 +22,7 @@ function PrintSheet({
   const [gap, setGap] = useState(initialGap);
   const [imageSize, setImageSize] = useState(initialImageSize);
   const imagePosition = generatePosition(paperSize, imageSize, gap);
+  const [imageUrl, setImageUrl] = useState("https://picsum.photos/500");
 
   const [open, setOpen] = useState(false);
   const [clickPosition, setClickPosition] = useState<Coordinate2D>({
@@ -93,6 +93,23 @@ function PrintSheet({
                 }}
               />
             </div>
+            <div>
+              <label htmlFor="imageFile">Image</label>
+              <input
+                type="file"
+                name="imageFile"
+                id="imageFile"
+                onChange={(event) => {
+                  if (event.target.files) {
+                    URL.revokeObjectURL(imageUrl);
+                    const objectURL = URL.createObjectURL(
+                      event.target.files[0]
+                    );
+                    setImageUrl(objectURL);
+                  }
+                }}
+              />
+            </div>
           </form>
         </div>
       ) : (
@@ -110,7 +127,7 @@ function PrintSheet({
             height={imageSize.height}
             x={x}
             y={y}
-            href={goat}
+            href={imageUrl}
             onClick={toggleModal}
           />
         ))}

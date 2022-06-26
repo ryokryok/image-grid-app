@@ -1,27 +1,21 @@
-import { useState } from "react";
-import { useFileUrl, usePopup } from "./lib/hooks";
+import { useFileUrl, useImageConfig, usePopup } from "./lib/hooks";
 import {
   A4,
-  defaultGap,
   generatePosition,
-  defaultImageSize,
+  defaultImageConfig,
   Size2D,
+  ImageConfig,
 } from "./lib/utils";
 
 type PrintSheetProps = {
   paperSize: Size2D;
-  initialImageSize: Size2D;
-  initialGap: number;
+  initialImageConfig: ImageConfig;
 };
 
-function PrintSheet({
-  paperSize,
-  initialImageSize,
-  initialGap,
-}: PrintSheetProps) {
-  const [gap, setGap] = useState(initialGap);
-  const [imageSize, setImageSize] = useState(initialImageSize);
-  const imagePosition = generatePosition(paperSize, imageSize, gap);
+function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
+  const { imageConfig, widthHandler, heightHandler, gapHandler } =
+    useImageConfig(initialImageConfig);
+  const imagePosition = generatePosition(paperSize, imageConfig);
 
   const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
   const { open, position, toggle } = usePopup<SVGImageElement>();
@@ -46,13 +40,8 @@ function PrintSheet({
                 type="number"
                 name="imageWidth"
                 id="imageWidth"
-                value={imageSize.width}
-                onChange={(event) => {
-                  setImageSize({
-                    ...imageSize,
-                    width: Number(event.target.value),
-                  });
-                }}
+                value={imageConfig.width}
+                onChange={widthHandler}
               />
             </div>
             <div>
@@ -61,13 +50,8 @@ function PrintSheet({
                 type="number"
                 name="imageHeight"
                 id="imageHeight"
-                value={imageSize.height}
-                onChange={(event) => {
-                  setImageSize({
-                    ...imageSize,
-                    height: Number(event.target.value),
-                  });
-                }}
+                value={imageConfig.height}
+                onChange={heightHandler}
               />
             </div>
             <div>
@@ -76,10 +60,8 @@ function PrintSheet({
                 type="number"
                 name="imageGap"
                 id="imageGap"
-                value={gap}
-                onChange={(event) => {
-                  setGap(Number(event.target.value));
-                }}
+                value={imageConfig.gap}
+                onChange={gapHandler}
               />
             </div>
             <div>
@@ -104,8 +86,8 @@ function PrintSheet({
         {imagePosition.map(({ x, y }) => (
           <image
             key={crypto.randomUUID()}
-            width={imageSize.width}
-            height={imageSize.height}
+            width={imageConfig.width}
+            height={imageConfig.height}
             x={x}
             y={y}
             href={imageUrl}
@@ -118,13 +100,7 @@ function PrintSheet({
 }
 
 function App() {
-  return (
-    <PrintSheet
-      paperSize={A4}
-      initialImageSize={defaultImageSize}
-      initialGap={defaultGap}
-    />
-  );
+  return <PrintSheet paperSize={A4} initialImageConfig={defaultImageConfig} />;
 }
 
 export default App;

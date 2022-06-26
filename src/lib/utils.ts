@@ -9,13 +9,16 @@ export const A4: Size2D = {
   height: 297,
 };
 
-export const defaultImageSize: Size2D = {
+export type ImageConfig = Size2D & {
+  gap: number;
+};
+
+export const defaultImageConfig: ImageConfig = {
   // mm scale
   width: 80,
   height: 80,
+  gap: 5,
 };
-
-export const defaultGap = 5;
 
 export type Coordinate2D = {
   x: number;
@@ -24,18 +27,17 @@ export type Coordinate2D = {
 
 export function generatePosition(
   paper: Size2D,
-  image: Size2D,
-  gap: number
+  image: ImageConfig
 ): Coordinate2D[] {
   const position = [];
 
-  const rangeX = Math.floor(paper.width / (image.width + gap));
-  const rangeY = Math.floor(paper.height / (image.height + gap));
+  const rangeX = Math.floor(paper.width / (image.width + image.gap));
+  const rangeY = Math.floor(paper.height / (image.height + image.gap));
 
   for (let indexX = 0; indexX < rangeX; indexX++) {
     for (let indexY = 0; indexY < rangeY; indexY++) {
-      const postionX = gap + indexX * (image.width + gap);
-      const positionY = gap + indexY * (image.height + gap);
+      const postionX = image.gap + indexX * (image.width + image.gap);
+      const positionY = image.gap + indexY * (image.height + image.gap);
       position.push({ x: postionX, y: positionY });
     }
   }

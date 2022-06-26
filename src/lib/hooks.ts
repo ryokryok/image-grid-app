@@ -1,5 +1,5 @@
 import { useState, MouseEvent, ChangeEvent } from "react";
-import { Coordinate2D } from "./utils";
+import { Coordinate2D, ImageConfig } from "./utils";
 
 const defaultCoordinate: Coordinate2D = {
   x: 0,
@@ -33,4 +33,31 @@ export function useFileUrl(initialUrl: string) {
   };
 
   return { imageUrl, fileHandler };
+}
+
+export function useImageConfig(initialImageConfig: ImageConfig) {
+  const [imageConfig, setImageConfig] = useState(initialImageConfig);
+
+  const widthHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setImageConfig({
+      ...imageConfig,
+      width: Number(event.target.value),
+    });
+  };
+
+  const heightHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setImageConfig({
+      ...imageConfig,
+      height: Number(event.target.value),
+    });
+  };
+
+  const gapHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setImageConfig({
+      ...imageConfig,
+      gap: Number(event.target.value),
+    });
+  };
+
+  return { imageConfig, widthHandler, heightHandler, gapHandler };
 }

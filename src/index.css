@@ -1,13 +1,79 @@
-body {
+@page {
+  size: A4 portrait;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+* {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+body {
+  width: 210mm;
+}
+
+svg {
+  /* 
+  Actual A4 height is 297mm.
+  I am adjusting it
+  because it dose not fit on one page when printing
+  */
+  width: 210mm;
+  height: 295mm;
+  page-break-after: always;
+}
+
+@media screen {
+  /* for preview at monitor */
+  body {
+    margin: 0 auto;
+    background-color: gray;
+  }
+
+  svg {
+    background-color: white;
+    box-shadow: 2mm 2mm rgba(0, 0, 0, 0.4);
+    margin-top: 5mm;
+  }
+
+  .popup-form-item {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.25rem;
+  }
+
+  .popup-label {
+    font-size: 1rem;
+    padding: 0rem 0.25rem;
+    font-family: sans-serif;
+    flex: auto;
+  }
+
+  .popup-input {
+    font-size: 1rem;
+    padding: 0.25rem;
+    font-family: sans-serif;
+    border: 1px solid gray;
+    border-radius: 0.25rem;
+    flex: initial;
+    max-width: 4rem;
+  }
+
+  .popup-file {
+    font-size: 1rem;
+    padding: 0rem;
+  }
+
+  .print-button {
+    font-size: 1rem;
+    font-family: sans-serif;
+    color: white;
+    padding: 0.25rem;
+    border: 0px;
+    border-radius: 1.5rem;
+    background-color: cornflowerblue;
+    width: 100%;
+  }
 }

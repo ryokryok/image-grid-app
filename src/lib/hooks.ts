@@ -16,6 +16,11 @@ export function usePopup<Element>(initialCoordinate = defaultCoordinate) {
       x: clientX,
       y: clientY,
     });
+
+    // auto close popup to print
+    window.onbeforeprint = (event) => {
+      setOpen(false);
+    };
   };
 
   return { open, position, toggle };

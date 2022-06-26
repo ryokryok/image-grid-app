@@ -15,8 +15,8 @@ export type ImageConfig = Size2D & {
 
 export const defaultImageConfig: ImageConfig = {
   // mm scale
-  width: 80,
-  height: 80,
+  width: 60,
+  height: 60,
   gap: 5,
 };
 

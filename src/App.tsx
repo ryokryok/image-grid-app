@@ -29,16 +29,13 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
       {open ? (
         <div
           style={{
-            backgroundColor: "#DDF",
-            padding: "0.5rem",
-            borderRadius: "0.5rem",
             position: "absolute",
             // offset for mouse cursor
             top: position.y + 10,
             left: position.x + 10,
           }}
         >
-          <form>
+          <form className="popup">
             <div className="popup-form-item">
               <label htmlFor="imageWidth" className="popup-label">
                 Width (mm)

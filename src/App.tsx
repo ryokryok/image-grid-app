@@ -42,7 +42,9 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 Width (mm)
               </label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="\d*"
                 name="imageWidth"
                 id="imageWidth"
                 className="popup-input"
@@ -52,11 +54,12 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
             </div>
             <div className="popup-form-item">
               <label htmlFor="imageHeight" className="popup-label">
-                {" "}
                 Height (mm)
               </label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="\d*"
                 name="imageHeight"
                 id="imageHeight"
                 className="popup-input"
@@ -69,7 +72,9 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 Gap (mm)
               </label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="\d*"
                 name="imageGap"
                 id="imageGap"
                 className="popup-input"

@@ -30,9 +30,8 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
         <div
           style={{
             position: "absolute",
-            // offset for mouse cursor
-            top: position.y + 10,
-            left: position.x + 10,
+            top: position.y,
+            left: position.x,
           }}
         >
           <form className="popup">

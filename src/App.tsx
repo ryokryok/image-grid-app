@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,6 +23,8 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
 
   const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
   const { open, position, toggle } = usePopup<SVGImageElement>();
+
+  const fileRef = useRef<HTMLInputElement>(null);
 
   return (
     <div>
@@ -75,7 +77,19 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 onChange={gapHandler}
               />
             </div>
-            <div>
+            <div className="popup-form-item">
+              <button
+                className="popup-button"
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (fileRef.current) {
+                    fileRef.current.click();
+                  }
+                }}
+              >
+                File upload
+              </button>
               <input
                 type="file"
                 name="imageFile"
@@ -83,6 +97,7 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 className="popup-file"
                 onChange={fileHandler}
                 accept="image/*"
+                ref={fileRef}
               />
             </div>
           </form>

@@ -22,7 +22,7 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
   const imagePosition = generatePosition(paperSize, imageConfig);
 
   const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
-  const { open, position, toggle } = usePopup<SVGImageElement>();
+  const { open, position, toggle } = usePopup<SVGSVGElement>();
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -114,6 +114,7 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
         viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="white"
+        onClick={toggle}
       >
         {imagePosition.map(({ x, y }) => (
           <image
@@ -123,7 +124,6 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
             x={x}
             y={y}
             href={imageUrl}
-            onClick={toggle}
           />
         ))}
       </svg>

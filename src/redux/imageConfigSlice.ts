@@ -17,14 +17,14 @@ export const imageConfigSlice = createSlice({
   name: "imageConfig",
   initialState,
   reducers: {
-    updateWidth: (state: ImageConfigState, action: PayloadAction<number>) => {
-      state.width = action.payload;
+    updateWidth: (state: ImageConfigState, action: PayloadAction<string>) => {
+      state.width = parseInt(action.payload) || 0;
     },
-    updateHeight: (state: ImageConfigState, action: PayloadAction<number>) => {
-      state.height = action.payload;
+    updateHeight: (state: ImageConfigState, action: PayloadAction<string>) => {
+      state.height = parseInt(action.payload) || 0;
     },
-    updateGap: (state: ImageConfigState, action: PayloadAction<number>) => {
-      state.gap = action.payload;
+    updateGap: (state: ImageConfigState, action: PayloadAction<string>) => {
+      state.gap = parseInt(action.payload) || 0;
     },
   },
 });

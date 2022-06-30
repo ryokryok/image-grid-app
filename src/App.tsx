@@ -46,7 +46,7 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
                 id="imageWidth"
                 className="popup-input"
                 value={imageConfig.width}
-                onChange={(e) => dispatch(updateWidth(Number(e.target.value)))}
+                onChange={(e) => dispatch(updateWidth(e.target.value))}
               />
             </div>
             <div className="popup-form-item">
@@ -61,7 +61,7 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
                 id="imageHeight"
                 className="popup-input"
                 value={imageConfig.height}
-                onChange={(e) => dispatch(updateHeight(Number(e.target.value)))}
+                onChange={(e) => dispatch(updateHeight(e.target.value))}
               />
             </div>
             <div className="popup-form-item">
@@ -76,7 +76,7 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
                 id="imageGap"
                 className="popup-input"
                 value={imageConfig.gap}
-                onChange={(e) => dispatch(updateGap(Number(e.target.value)))}
+                onChange={(e) => dispatch(updateGap(e.target.value))}
               />
             </div>
             <div className="popup-form-item">

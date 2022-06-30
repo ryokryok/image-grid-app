@@ -2,23 +2,20 @@ import { useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useFileUrl, useImageConfig, usePopup } from "./lib/hooks";
-import {
-  A4,
-  generatePosition,
-  defaultImageConfig,
-  Size2D,
-  ImageConfig,
-} from "./lib/utils";
+import { useFileUrl, usePopup } from "./lib/hooks";
+import { updateWidth, updateHeight, updateGap } from "./redux/imageConfigSlice";
+import { useSelector, useDispatch } from "react-redux";
+
+import { A4, generatePosition, Size2D } from "./lib/utils";
+import type { RootState } from "./redux/store";
 
 type PrintSheetProps = {
   paperSize: Size2D;
-  initialImageConfig: ImageConfig;
 };
 
-function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
-  const { imageConfig, widthHandler, heightHandler, gapHandler } =
-    useImageConfig(initialImageConfig);
+function PrintSheet({ paperSize }: PrintSheetProps) {
+  const { imageConfig } = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
   const imagePosition = generatePosition(paperSize, imageConfig);
 
   const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
@@ -49,7 +46,7 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 id="imageWidth"
                 className="popup-input"
                 value={imageConfig.width}
-                onChange={widthHandler}
+                onChange={(e) => dispatch(updateWidth(Number(e.target.value)))}
               />
             </div>
             <div className="popup-form-item">
@@ -64,7 +61,7 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 id="imageHeight"
                 className="popup-input"
                 value={imageConfig.height}
-                onChange={heightHandler}
+                onChange={(e) => dispatch(updateHeight(Number(e.target.value)))}
               />
             </div>
             <div className="popup-form-item">
@@ -79,7 +76,7 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 id="imageGap"
                 className="popup-input"
                 value={imageConfig.gap}
-                onChange={gapHandler}
+                onChange={(e) => dispatch(updateGap(Number(e.target.value)))}
               />
             </div>
             <div className="popup-form-item">
@@ -162,7 +159,7 @@ function App() {
         autoClose={4000}
         className="hide-when-print"
       />
-      <PrintSheet paperSize={A4} initialImageConfig={defaultImageConfig} />
+      <PrintSheet paperSize={A4} />
     </>
   );
 }

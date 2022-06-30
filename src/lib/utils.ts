@@ -13,13 +13,6 @@ export type ImageConfig = Size2D & {
   gap: number;
 };
 
-export const defaultImageConfig: ImageConfig = {
-  // mm scale
-  width: 60,
-  height: 60,
-  gap: 5,
-};
-
 export type Coordinate2D = {
   x: number;
   y: number;

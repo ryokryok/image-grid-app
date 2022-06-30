@@ -4,18 +4,17 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useFileUrl, usePopup } from "./lib/hooks";
 import { updateWidth, updateHeight, updateGap } from "./redux/imageConfigSlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
 import { A4, generatePosition, Size2D } from "./lib/utils";
-import type { RootState } from "./redux/store";
 
 type PrintSheetProps = {
   paperSize: Size2D;
 };
 
 function PrintSheet({ paperSize }: PrintSheetProps) {
-  const { imageConfig } = useSelector((state: RootState) => state);
-  const dispatch = useDispatch();
+  const { imageConfig } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
   const imagePosition = generatePosition(paperSize, imageConfig);
 
   const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");

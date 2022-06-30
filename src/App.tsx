@@ -3,7 +3,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useFileUrl, usePopup } from "./lib/hooks";
-import { updateWidth, updateHeight, updateGap } from "./redux/imageConfigSlice";
+import {
+  updateWidth,
+  updateHeight,
+  updateGap,
+  updateFixed,
+} from "./redux/imageConfigSlice";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
 import { A4, generatePosition, Size2D } from "./lib/utils";
@@ -62,6 +67,19 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
                 value={imageConfig.height}
                 onChange={(e) => dispatch(updateHeight(e.target.value))}
               />
+            </div>
+            <div className="popup-form-item-inline">
+              <input
+                type="checkbox"
+                name="imageAspectRatio"
+                id="imageAspectRatio"
+                className="popup-checkbox"
+                checked={imageConfig.fixed}
+                onChange={(e) => dispatch(updateFixed(e.target.checked))}
+              />
+              <label htmlFor="imageAspectRatio" className="popup-label">
+                Fixed sizing?
+              </label>
             </div>
             <div className="popup-form-item">
               <label htmlFor="imageGap" className="popup-label">

@@ -107,4 +107,8 @@
     height: 295mm;
     page-break-after: always;
   }
+
+  .popup {
+    display: none;
+  }
 }

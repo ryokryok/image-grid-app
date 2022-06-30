@@ -2,13 +2,15 @@ import { useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useFileUrl, usePopup } from "./lib/hooks";
+import { useFileUrl } from "./lib/hooks";
 import {
   updateWidth,
   updateHeight,
   updateGap,
   updateFixed,
 } from "./redux/imageConfigSlice";
+
+import { toggle } from "./redux/popupSlice";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
 import { A4, generatePosition, Size2D } from "./lib/utils";
@@ -18,23 +20,22 @@ type PrintSheetProps = {
 };
 
 function PrintSheet({ paperSize }: PrintSheetProps) {
-  const { imageConfig } = useAppSelector((state) => state);
+  const { imageConfig, popup } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const imagePosition = generatePosition(paperSize, imageConfig);
 
   const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
-  const { open, position, toggle } = usePopup();
 
   const fileRef = useRef<HTMLInputElement>(null);
 
   return (
     <div>
-      {open ? (
+      {popup.isOpen ? (
         <div
           style={{
             position: "absolute",
-            top: position.y,
-            left: position.x,
+            top: popup.y,
+            left: popup.x,
           }}
         >
           <form className="popup">
@@ -133,7 +134,11 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
       ) : (
         <></>
       )}
-      <div onClick={toggle}>
+      <div
+        onClick={(e) => {
+          dispatch(toggle({ x: e.clientX, y: e.clientY }));
+        }}
+      >
         <svg
           viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
           xmlns="http://www.w3.org/2000/svg"

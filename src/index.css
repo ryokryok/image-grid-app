@@ -108,7 +108,13 @@
     page-break-after: always;
   }
 
+  /* hide popup when printing */
   .popup {
+    display: none;
+  }
+
+  /* hide toast when printing */
+  .hide-when-print {
     display: none;
   }
 }

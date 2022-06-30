@@ -157,7 +157,11 @@ function App() {
 
   return (
     <>
-      <ToastContainer position={`top-center`} autoClose={4000} />
+      <ToastContainer
+        position={`top-center`}
+        autoClose={4000}
+        className="hide-when-print"
+      />
       <PrintSheet paperSize={A4} initialImageConfig={defaultImageConfig} />
     </>
   );

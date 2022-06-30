@@ -10,26 +10,14 @@
   box-sizing: border-box;
 }
 
-body {
-  width: 210mm;
-}
-
-svg {
-  /* 
-  Actual A4 height is 297mm.
-  I am adjusting it
-  because it dose not fit on one page when printing
-  */
-  width: 210mm;
-  height: 295mm;
-  page-break-after: always;
-}
-
 @media screen {
   /* for preview at monitor */
   body {
     margin: 0 auto;
     background-color: gray;
+    /* A4 aspect ratio */
+    aspect-ratio: 210 / 297;
+    max-height: 55rem;
   }
 
   svg {
@@ -38,42 +26,95 @@ svg {
     margin-top: 5mm;
   }
 
+  input {
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+
+  .popup {
+    padding: 0.5rem;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    background-color: white;
+    max-width: 10rem;
+  }
+
   .popup-form-item {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    padding-bottom: 0.25rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .popup-form-item:last-child {
+    padding-bottom: 0;
   }
 
   .popup-label {
     font-size: 1rem;
-    padding: 0rem 0.25rem;
+    padding-bottom: 0.25rem;
     font-family: sans-serif;
-    flex: auto;
   }
 
   .popup-input {
     font-size: 1rem;
     padding: 0.25rem;
     font-family: sans-serif;
-    border: 1px solid gray;
-    border-radius: 0.25rem;
-    flex: initial;
-    max-width: 4rem;
+    border: none;
+    border-bottom: 2px solid gray;
+    background-color: gainsboro;
+  }
+
+  .popup-button {
+    font-size: 1rem;
+    font-family: sans-serif;
+    color: black;
+    padding: 0.25rem;
+    border: 1px solid black;
+    border-radius: 1.5rem;
+    width: 100%;
+  }
+
+  .button-primary {
+    border: 0;
+    color: white;
+    background-color: royalblue;
+  }
+
+  .button-secondary {
+    color: black;
+    background-color: white;
   }
 
   .popup-file {
-    font-size: 1rem;
-    padding: 0rem;
+    display: none;
+  }
+}
+
+/* css for printing */
+@media print {
+  body {
+    width: 210mm;
   }
 
-  .print-button {
-    font-size: 1rem;
-    font-family: sans-serif;
-    color: white;
-    padding: 0.25rem;
-    border: 0px;
-    border-radius: 1.5rem;
-    background-color: cornflowerblue;
-    width: 100%;
+  svg {
+    /* 
+    Actual A4 height is 297mm.
+    I am adjusting it
+    because it dose not fit on one page when printing
+    */
+    width: 210mm;
+    height: 295mm;
+    page-break-after: always;
+  }
+
+  /* hide popup when printing */
+  .popup {
+    display: none;
+  }
+
+  /* hide toast when printing */
+  .hide-when-print {
+    display: none;
   }
 }

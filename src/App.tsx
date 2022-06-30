@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -22,29 +22,29 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
   const imagePosition = generatePosition(paperSize, imageConfig);
 
   const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
-  const { open, position, toggle } = usePopup<SVGImageElement>();
+  const { open, position, toggle } = usePopup();
+
+  const fileRef = useRef<HTMLInputElement>(null);
 
   return (
     <div>
       {open ? (
         <div
           style={{
-            backgroundColor: "#DDF",
-            padding: "0.5rem",
-            borderRadius: "0.5rem",
             position: "absolute",
-            // offset for mouse cursor
-            top: position.y + 10,
-            left: position.x + 10,
+            top: position.y,
+            left: position.x,
           }}
         >
-          <form>
+          <form className="popup">
             <div className="popup-form-item">
               <label htmlFor="imageWidth" className="popup-label">
                 Width (mm)
               </label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="\d*"
                 name="imageWidth"
                 id="imageWidth"
                 className="popup-input"
@@ -54,11 +54,12 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
             </div>
             <div className="popup-form-item">
               <label htmlFor="imageHeight" className="popup-label">
-                {" "}
                 Height (mm)
               </label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="\d*"
                 name="imageHeight"
                 id="imageHeight"
                 className="popup-input"
@@ -71,7 +72,9 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 Gap (mm)
               </label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="\d*"
                 name="imageGap"
                 id="imageGap"
                 className="popup-input"
@@ -79,7 +82,19 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 onChange={gapHandler}
               />
             </div>
-            <div>
+            <div className="popup-form-item">
+              <button
+                className="popup-button button-primary"
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (fileRef.current) {
+                    fileRef.current.click();
+                  }
+                }}
+              >
+                File upload
+              </button>
               <input
                 type="file"
                 name="imageFile"
@@ -87,30 +102,41 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 className="popup-file"
                 onChange={fileHandler}
                 accept="image/*"
+                ref={fileRef}
               />
+            </div>
+            <div className="popup-form-item">
+              <button
+                className="popup-button button-secondary"
+                type="button"
+                onClick={() => window.print()}
+              >
+                Print
+              </button>
             </div>
           </form>
         </div>
       ) : (
         <></>
       )}
-      <svg
-        viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
-        xmlns="http://www.w3.org/2000/svg"
-        fill="white"
-      >
-        {imagePosition.map(({ x, y }) => (
-          <image
-            key={crypto.randomUUID()}
-            width={imageConfig.width}
-            height={imageConfig.height}
-            x={x}
-            y={y}
-            href={imageUrl}
-            onClick={toggle}
-          />
-        ))}
-      </svg>
+      <div onClick={toggle}>
+        <svg
+          viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
+          xmlns="http://www.w3.org/2000/svg"
+          fill="white"
+        >
+          {imagePosition.map(({ x, y }) => (
+            <image
+              key={crypto.randomUUID()}
+              width={imageConfig.width}
+              height={imageConfig.height}
+              x={x}
+              y={y}
+              href={imageUrl}
+            />
+          ))}
+        </svg>
+      </div>
     </div>
   );
 }
@@ -131,7 +157,11 @@ function App() {
 
   return (
     <>
-      <ToastContainer position={`top-center`} autoClose={4000} />
+      <ToastContainer
+        position={`top-center`}
+        autoClose={4000}
+        className="hide-when-print"
+      />
       <PrintSheet paperSize={A4} initialImageConfig={defaultImageConfig} />
     </>
   );

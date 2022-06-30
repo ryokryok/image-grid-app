@@ -6,21 +6,21 @@ const defaultCoordinate: Coordinate2D = {
   y: 0,
 };
 
-export function usePopup<Element>(initialCoordinate = defaultCoordinate) {
+export function usePopup(initialCoordinate = defaultCoordinate) {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<Coordinate2D>(initialCoordinate);
-  const toggle = (event: MouseEvent<Element>) => {
+  const toggle = (event: MouseEvent<HTMLElement>) => {
     setOpen(!open);
     const { clientX, clientY } = event;
     setPosition({
       x: clientX,
       y: clientY,
     });
+  };
 
-    // auto close popup to print
-    window.onbeforeprint = (event) => {
-      setOpen(false);
-    };
+  // auto close popup to print
+  window.onbeforeprint = (event) => {
+    setOpen(false);
   };
 
   return { open, position, toggle };

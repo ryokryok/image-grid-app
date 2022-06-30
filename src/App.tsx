@@ -84,7 +84,7 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
             </div>
             <div className="popup-form-item">
               <button
-                className="popup-button"
+                className="popup-button button-primary"
                 type="button"
                 onClick={(event) => {
                   event.preventDefault();
@@ -104,6 +104,15 @@ function PrintSheet({ paperSize, initialImageConfig }: PrintSheetProps) {
                 accept="image/*"
                 ref={fileRef}
               />
+            </div>
+            <div className="popup-form-item">
+              <button
+                className="popup-button button-secondary"
+                type="button"
+                onClick={() => window.print()}
+              >
+                Print
+              </button>
             </div>
           </form>
         </div>

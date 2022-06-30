@@ -68,12 +68,22 @@
   .popup-button {
     font-size: 1rem;
     font-family: sans-serif;
-    color: white;
+    color: black;
     padding: 0.25rem;
-    border: 0px;
+    border: 1px solid black;
     border-radius: 1.5rem;
-    background-color: royalblue;
     width: 100%;
+  }
+
+  .button-primary {
+    border: 0;
+    color: white;
+    background-color: royalblue;
+  }
+
+  .button-secondary {
+    color: black;
+    background-color: white;
   }
 
   .popup-file {

@@ -8,12 +8,13 @@ import {
   updateGap,
   updateFixed,
   setUrl,
+  updateAspectRatio,
 } from "./redux/imageConfigSlice";
 
 import { toggle } from "./redux/popupSlice";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
-import { A4, generatePosition, Size2D } from "./lib/utils";
+import { A4, generatePosition, round, Size2D } from "./lib/utils";
 
 type PrintSheetProps = {
   paperSize: Size2D;
@@ -151,6 +152,15 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
               x={x}
               y={y}
               href={imageConfig.url}
+              onLoad={() => {
+                const image = new Image();
+                image.onload = () => {
+                  const { naturalWidth, naturalHeight } = image;
+                  const aspectRatio = round(naturalWidth / naturalHeight, 2);
+                  dispatch(updateAspectRatio(aspectRatio));
+                };
+                image.src = imageConfig.url;
+              }}
             />
           ))}
         </svg>

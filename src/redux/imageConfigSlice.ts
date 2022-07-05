@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { round } from "../lib/utils";
 
 export interface ImageConfigState {
   width: number;
@@ -7,6 +8,7 @@ export interface ImageConfigState {
   gap: number;
   fixed: boolean;
   url: string;
+  aspectRatio: number;
 }
 
 const initialState: ImageConfigState = {
@@ -15,6 +17,7 @@ const initialState: ImageConfigState = {
   gap: 5,
   fixed: true,
   url: "https://picsum.photos/500",
+  aspectRatio: 1.0,
 };
 
 export const imageConfigSlice = createSlice({
@@ -22,16 +25,16 @@ export const imageConfigSlice = createSlice({
   initialState,
   reducers: {
     updateWidth: (state: ImageConfigState, action: PayloadAction<string>) => {
-      const updateValue = parseInt(action.payload) || 1;
+      const updateValue = parseInt(action.payload) || 0;
       if (state.fixed) {
-        state.height = (state.height / state.width) * updateValue;
+        state.height = round((1 / state.aspectRatio) * updateValue, 2);
       }
       state.width = updateValue;
     },
     updateHeight: (state: ImageConfigState, action: PayloadAction<string>) => {
-      const updateValue = parseInt(action.payload) || 1;
+      const updateValue = parseInt(action.payload) || 0;
       if (state.fixed) {
-        state.width = (state.width / state.height) * updateValue;
+        state.width = round(state.aspectRatio * updateValue, 2);
       }
       state.height = updateValue;
     },
@@ -54,10 +57,26 @@ export const imageConfigSlice = createSlice({
         }
       }
     },
+    updateAspectRatio: (
+      state: ImageConfigState,
+      action: PayloadAction<number>
+    ) => {
+      const aspectRatio = action.payload;
+      state.aspectRatio = aspectRatio;
+      if (state.fixed) {
+        state.width = round(state.height * aspectRatio, 2);
+      }
+    },
   },
 });
 
-export const { updateWidth, updateHeight, updateGap, updateFixed, setUrl } =
-  imageConfigSlice.actions;
+export const {
+  updateWidth,
+  updateHeight,
+  updateGap,
+  updateFixed,
+  setUrl,
+  updateAspectRatio,
+} = imageConfigSlice.actions;
 
 export default imageConfigSlice.reducer;

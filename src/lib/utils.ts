@@ -36,3 +36,7 @@ export function generatePosition(
   }
   return position;
 }
+
+export function round(value: number, digits = 0): number {
+  return parseFloat(value.toFixed(digits));
+}

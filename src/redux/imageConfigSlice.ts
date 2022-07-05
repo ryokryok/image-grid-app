@@ -6,6 +6,7 @@ export interface ImageConfigState {
   height: number;
   gap: number;
   fixed: boolean;
+  url: string;
 }
 
 const initialState: ImageConfigState = {
@@ -13,6 +14,7 @@ const initialState: ImageConfigState = {
   height: 60,
   gap: 5,
   fixed: true,
+  url: "https://picsum.photos/500",
 };
 
 export const imageConfigSlice = createSlice({
@@ -39,10 +41,23 @@ export const imageConfigSlice = createSlice({
     updateFixed: (state: ImageConfigState, action: PayloadAction<boolean>) => {
       state.fixed = action.payload;
     },
+    setUrl: (
+      state: ImageConfigState,
+      action: PayloadAction<FileList | null>
+    ) => {
+      if (action.payload) {
+        const file = action.payload[0];
+        if (file) {
+          // release memory when image is changed
+          URL.revokeObjectURL(state.url);
+          state.url = URL.createObjectURL(file);
+        }
+      }
+    },
   },
 });
 
-export const { updateWidth, updateHeight, updateGap, updateFixed } =
+export const { updateWidth, updateHeight, updateGap, updateFixed, setUrl } =
   imageConfigSlice.actions;
 
 export default imageConfigSlice.reducer;

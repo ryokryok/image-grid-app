@@ -2,12 +2,12 @@ import { useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useFileUrl } from "./lib/hooks";
 import {
   updateWidth,
   updateHeight,
   updateGap,
   updateFixed,
+  setUrl,
 } from "./redux/imageConfigSlice";
 
 import { toggle } from "./redux/popupSlice";
@@ -23,9 +23,6 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
   const { imageConfig, popup } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const imagePosition = generatePosition(paperSize, imageConfig);
-
-  const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
-
   const fileRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -115,7 +112,9 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
                 name="imageFile"
                 id="imageFile"
                 className="popup-file"
-                onChange={fileHandler}
+                onChange={(e) => {
+                  dispatch(setUrl(e.target.files));
+                }}
                 accept="image/*"
                 ref={fileRef}
               />
@@ -151,7 +150,7 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
               height={imageConfig.height}
               x={x}
               y={y}
-              href={imageUrl}
+              href={imageConfig.url}
             />
           ))}
         </svg>

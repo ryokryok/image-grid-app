@@ -2,34 +2,38 @@ import { useEffect, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useFileUrl, usePopup } from "./lib/hooks";
-import { updateWidth, updateHeight, updateGap } from "./redux/imageConfigSlice";
+import {
+  updateWidth,
+  updateHeight,
+  updateGap,
+  updateFixed,
+  setUrl,
+  updateAspectRatio,
+} from "./redux/imageConfigSlice";
+
+import { toggle } from "./redux/popupSlice";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
-import { A4, generatePosition, Size2D } from "./lib/utils";
+import { A4, generatePosition, round, Size2D } from "./lib/utils";
 
 type PrintSheetProps = {
   paperSize: Size2D;
 };
 
 function PrintSheet({ paperSize }: PrintSheetProps) {
-  const { imageConfig } = useAppSelector((state) => state);
+  const { imageConfig, popup } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const imagePosition = generatePosition(paperSize, imageConfig);
-
-  const { imageUrl, fileHandler } = useFileUrl("https://picsum.photos/500");
-  const { open, position, toggle } = usePopup();
-
   const fileRef = useRef<HTMLInputElement>(null);
 
   return (
     <div>
-      {open ? (
+      {popup.isOpen ? (
         <div
           style={{
             position: "absolute",
-            top: position.y,
-            left: position.x,
+            top: popup.y,
+            left: popup.x,
           }}
         >
           <form className="popup">
@@ -62,6 +66,19 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
                 value={imageConfig.height}
                 onChange={(e) => dispatch(updateHeight(e.target.value))}
               />
+            </div>
+            <div className="popup-form-item-inline">
+              <input
+                type="checkbox"
+                name="imageAspectRatio"
+                id="imageAspectRatio"
+                className="popup-checkbox"
+                checked={imageConfig.fixed}
+                onChange={(e) => dispatch(updateFixed(e.target.checked))}
+              />
+              <label htmlFor="imageAspectRatio" className="popup-label">
+                Fixed sizing?
+              </label>
             </div>
             <div className="popup-form-item">
               <label htmlFor="imageGap" className="popup-label">
@@ -96,7 +113,9 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
                 name="imageFile"
                 id="imageFile"
                 className="popup-file"
-                onChange={fileHandler}
+                onChange={(e) => {
+                  dispatch(setUrl(e.target.files));
+                }}
                 accept="image/*"
                 ref={fileRef}
               />
@@ -115,7 +134,11 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
       ) : (
         <></>
       )}
-      <div onClick={toggle}>
+      <div
+        onClick={(e) => {
+          dispatch(toggle({ x: e.clientX, y: e.clientY }));
+        }}
+      >
         <svg
           viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
           xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +151,16 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
               height={imageConfig.height}
               x={x}
               y={y}
-              href={imageUrl}
+              href={imageConfig.url}
+              onLoad={() => {
+                const image = new Image();
+                image.onload = () => {
+                  const { naturalWidth, naturalHeight } = image;
+                  const aspectRatio = round(naturalWidth / naturalHeight, 2);
+                  dispatch(updateAspectRatio(aspectRatio));
+                };
+                image.src = imageConfig.url;
+              }}
             />
           ))}
         </svg>

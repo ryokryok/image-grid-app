@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,6 +15,16 @@ import { toggle } from "./redux/popupSlice";
 import { useAppSelector, useAppDispatch } from "./redux/hooks";
 
 import { A4, generatePosition, round, Size2D } from "./lib/utils";
+import {
+  Button,
+  Form,
+  InputCheckbox,
+  InputFileButton,
+  InputItem,
+  InputItemInline,
+  InputLabel,
+  NumberInput,
+} from "./components/Form";
 
 type PrintSheetProps = {
   paperSize: Size2D;
@@ -24,7 +34,6 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
   const { imageConfig, popup } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const imagePosition = generatePosition(paperSize, imageConfig);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   return (
     <div>
@@ -36,100 +45,58 @@ function PrintSheet({ paperSize }: PrintSheetProps) {
             left: popup.x,
           }}
         >
-          <form className="popup">
-            <div className="popup-form-item">
-              <label htmlFor="imageWidth" className="popup-label">
-                Width (mm)
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="\d*"
+          <Form>
+            <InputItem>
+              <InputLabel htmlFor="imageWidth">Width (mm)</InputLabel>
+              <NumberInput
                 name="imageWidth"
                 id="imageWidth"
-                className="popup-input"
                 value={imageConfig.width}
                 onChange={(e) => dispatch(updateWidth(e.target.value))}
               />
-            </div>
-            <div className="popup-form-item">
-              <label htmlFor="imageHeight" className="popup-label">
-                Height (mm)
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="\d*"
+            </InputItem>
+            <InputItem>
+              <InputLabel htmlFor="imageHeight">Height (mm)</InputLabel>
+              <NumberInput
                 name="imageHeight"
                 id="imageHeight"
-                className="popup-input"
                 value={imageConfig.height}
                 onChange={(e) => dispatch(updateHeight(e.target.value))}
               />
-            </div>
-            <div className="popup-form-item-inline">
-              <input
-                type="checkbox"
+            </InputItem>
+            <InputItemInline>
+              <InputCheckbox
                 name="imageAspectRatio"
                 id="imageAspectRatio"
-                className="popup-checkbox"
                 checked={imageConfig.fixed}
                 onChange={(e) => dispatch(updateFixed(e.target.checked))}
               />
-              <label htmlFor="imageAspectRatio" className="popup-label">
-                Fixed sizing?
-              </label>
-            </div>
-            <div className="popup-form-item">
-              <label htmlFor="imageGap" className="popup-label">
-                Gap (mm)
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="\d*"
+              <InputLabel htmlFor="imageAspectRatio"> Fixed sizing?</InputLabel>
+            </InputItemInline>
+            <InputItem>
+              <InputLabel htmlFor="imageGap">Gap (mm)</InputLabel>
+              <NumberInput
                 name="imageGap"
                 id="imageGap"
-                className="popup-input"
                 value={imageConfig.gap}
                 onChange={(e) => dispatch(updateGap(e.target.value))}
               />
-            </div>
-            <div className="popup-form-item">
-              <button
-                className="popup-button button-primary"
-                type="button"
-                onClick={(event) => {
-                  event.preventDefault();
-                  if (fileRef.current) {
-                    fileRef.current.click();
-                  }
-                }}
-              >
-                File upload
-              </button>
-              <input
-                type="file"
+            </InputItem>
+            <InputItem>
+              <InputFileButton
+                label={"File upload"}
                 name="imageFile"
                 id="imageFile"
-                className="popup-file"
+                accept={"image/*"}
                 onChange={(e) => {
                   dispatch(setUrl(e.target.files));
                 }}
-                accept="image/*"
-                ref={fileRef}
               />
-            </div>
-            <div className="popup-form-item">
-              <button
-                className="popup-button button-secondary"
-                type="button"
-                onClick={() => window.print()}
-              >
-                Print
-              </button>
-            </div>
-          </form>
+            </InputItem>
+            <InputItem>
+              <Button onClick={() => window.print()}>Print</Button>
+            </InputItem>
+          </Form>
         </div>
       ) : (
         <></>

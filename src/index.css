@@ -44,8 +44,11 @@
   .popup-form-item-inline {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
     padding-bottom: 0.5rem;
+  }
+
+  .popup-form-item-inline > label {
+    margin-inline-start: 0.5rem;
   }
 
   .popup-form-item:last-child {
@@ -92,7 +95,6 @@
 
   .popup-checkbox {
     border: 1px solid black;
-    padding: 0.5rem;
   }
 
   .popup-file {

@@ -26,113 +26,125 @@ import {
   NumberInput,
 } from "./components/Form";
 
-type PrintSheetProps = {
+function UserConfigForm() {
+  const { imageConfig } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+  return (
+    <Form>
+      <InputItem>
+        <InputLabel htmlFor="imageWidth">Width (mm)</InputLabel>
+        <NumberInput
+          name="imageWidth"
+          id="imageWidth"
+          value={imageConfig.width}
+          onChange={(e) => dispatch(updateWidth(e.target.value))}
+        />
+      </InputItem>
+      <InputItem>
+        <InputLabel htmlFor="imageHeight">Height (mm)</InputLabel>
+        <NumberInput
+          name="imageHeight"
+          id="imageHeight"
+          value={imageConfig.height}
+          onChange={(e) => dispatch(updateHeight(e.target.value))}
+        />
+      </InputItem>
+      <InputItemInline>
+        <InputCheckbox
+          name="imageAspectRatio"
+          id="imageAspectRatio"
+          checked={imageConfig.fixed}
+          onChange={(e) => dispatch(updateFixed(e.target.checked))}
+        />
+        <InputLabel htmlFor="imageAspectRatio"> Fixed sizing?</InputLabel>
+      </InputItemInline>
+      <InputItem>
+        <InputLabel htmlFor="imageGap">Gap (mm)</InputLabel>
+        <NumberInput
+          name="imageGap"
+          id="imageGap"
+          value={imageConfig.gap}
+          onChange={(e) => dispatch(updateGap(e.target.value))}
+        />
+      </InputItem>
+      <InputItem>
+        <InputFileButton
+          label={"File upload"}
+          name="imageFile"
+          id="imageFile"
+          accept={"image/*"}
+          onChange={(e) => {
+            dispatch(setUrl(e.target.files));
+          }}
+        />
+      </InputItem>
+      <InputItem>
+        <Button onClick={() => window.print()}>Print</Button>
+      </InputItem>
+    </Form>
+  );
+}
+
+type PrintPreviewProps = {
   paperSize: Size2D;
 };
 
-function PrintSheet({ paperSize }: PrintSheetProps) {
-  const { imageConfig, popup } = useAppSelector((state) => state);
+function PrintPreview({ paperSize }: PrintPreviewProps) {
+  const { imageConfig } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const imagePosition = generatePosition(paperSize, imageConfig);
 
   return (
-    <div>
-      {popup.isOpen ? (
+    <svg
+      viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
+      xmlns="http://www.w3.org/2000/svg"
+      fill="white"
+      onClick={(e) => {
+        dispatch(toggle({ x: e.clientX, y: e.clientY }));
+      }}
+    >
+      {imagePosition.map(({ x, y }) => (
+        <image
+          key={crypto.randomUUID()}
+          width={imageConfig.width}
+          height={imageConfig.height}
+          x={x}
+          y={y}
+          href={imageConfig.url}
+          onLoad={() => {
+            const image = new Image();
+            image.onload = () => {
+              const { naturalWidth, naturalHeight } = image;
+              const aspectRatio = round(naturalWidth / naturalHeight, 2);
+              dispatch(updateAspectRatio(aspectRatio));
+            };
+            image.src = imageConfig.url;
+          }}
+        />
+      ))}
+    </svg>
+  );
+}
+
+function Popup() {
+  const { popup } = useAppSelector((state) => state);
+  const { isOpen, x, y } = popup;
+  return (
+    <>
+      {isOpen ? (
         <div
           style={{
             position: "absolute",
-            top: popup.y,
-            left: popup.x,
+            top: y,
+            left: x,
           }}
         >
-          <Form>
-            <InputItem>
-              <InputLabel htmlFor="imageWidth">Width (mm)</InputLabel>
-              <NumberInput
-                name="imageWidth"
-                id="imageWidth"
-                value={imageConfig.width}
-                onChange={(e) => dispatch(updateWidth(e.target.value))}
-              />
-            </InputItem>
-            <InputItem>
-              <InputLabel htmlFor="imageHeight">Height (mm)</InputLabel>
-              <NumberInput
-                name="imageHeight"
-                id="imageHeight"
-                value={imageConfig.height}
-                onChange={(e) => dispatch(updateHeight(e.target.value))}
-              />
-            </InputItem>
-            <InputItemInline>
-              <InputCheckbox
-                name="imageAspectRatio"
-                id="imageAspectRatio"
-                checked={imageConfig.fixed}
-                onChange={(e) => dispatch(updateFixed(e.target.checked))}
-              />
-              <InputLabel htmlFor="imageAspectRatio"> Fixed sizing?</InputLabel>
-            </InputItemInline>
-            <InputItem>
-              <InputLabel htmlFor="imageGap">Gap (mm)</InputLabel>
-              <NumberInput
-                name="imageGap"
-                id="imageGap"
-                value={imageConfig.gap}
-                onChange={(e) => dispatch(updateGap(e.target.value))}
-              />
-            </InputItem>
-            <InputItem>
-              <InputFileButton
-                label={"File upload"}
-                name="imageFile"
-                id="imageFile"
-                accept={"image/*"}
-                onChange={(e) => {
-                  dispatch(setUrl(e.target.files));
-                }}
-              />
-            </InputItem>
-            <InputItem>
-              <Button onClick={() => window.print()}>Print</Button>
-            </InputItem>
-          </Form>
+          <UserConfigForm />
         </div>
       ) : (
         <></>
       )}
-      <div
-        onClick={(e) => {
-          dispatch(toggle({ x: e.clientX, y: e.clientY }));
-        }}
-      >
-        <svg
-          viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
-          xmlns="http://www.w3.org/2000/svg"
-          fill="white"
-        >
-          {imagePosition.map(({ x, y }) => (
-            <image
-              key={crypto.randomUUID()}
-              width={imageConfig.width}
-              height={imageConfig.height}
-              x={x}
-              y={y}
-              href={imageConfig.url}
-              onLoad={() => {
-                const image = new Image();
-                image.onload = () => {
-                  const { naturalWidth, naturalHeight } = image;
-                  const aspectRatio = round(naturalWidth / naturalHeight, 2);
-                  dispatch(updateAspectRatio(aspectRatio));
-                };
-                image.src = imageConfig.url;
-              }}
-            />
-          ))}
-        </svg>
-      </div>
-    </div>
+    </>
   );
 }
 
@@ -157,7 +169,8 @@ function App() {
         autoClose={4000}
         className="hide-when-print"
       />
-      <PrintSheet paperSize={A4} />
+      <Popup />
+      <PrintPreview paperSize={A4} />
     </>
   );
 }

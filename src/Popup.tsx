@@ -70,7 +70,9 @@ function UserConfigForm() {
         />
       </InputItem>
       <InputItem>
-        <Button onClick={() => window.print()}>Print</Button>
+        <Button primary={"secondary"} onClick={() => window.print()}>
+          Print
+        </Button>
       </InputItem>
     </Form>
   );

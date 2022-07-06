@@ -59,6 +59,11 @@
     margin-right: 0;
   }
 
+  .modal-content-wrapper {
+    font-family: sans-serif;
+    padding-bottom: 1rem;
+  }
+
   .popup {
     padding: 0.5rem;
     border: 1px solid black;

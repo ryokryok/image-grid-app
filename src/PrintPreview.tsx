@@ -28,6 +28,7 @@ export function PrintPreview({ paperSize }: PrintPreviewProps) {
       viewBox={`0 0 ${paperSize.width} ${paperSize.height}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="white"
+      className="print-preview"
       onClick={(e) => {
         dispatch(toggle({ x: e.clientX, y: e.clientY }));
       }}

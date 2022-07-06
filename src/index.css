@@ -10,6 +10,13 @@
   box-sizing: border-box;
 }
 
+*:link,
+*:hover,
+*:visited {
+  color: black;
+  text-decoration: none;
+}
+
 @media screen {
   /* for preview at monitor */
   body {
@@ -17,13 +24,39 @@
     background-color: gray;
     /* A4 aspect ratio */
     aspect-ratio: 210 / 297;
-    max-height: 55rem;
+    max-height: 50rem;
   }
 
-  svg {
+  svg.print-preview {
     background-color: white;
     box-shadow: 2mm 2mm rgba(0, 0, 0, 0.4);
     margin-top: 5mm;
+  }
+
+  .site-header {
+    padding: 0.5rem;
+    background-color: white;
+    display: flex;
+  }
+
+  .site-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: sans-serif;
+    flex: auto;
+  }
+
+  .site-subcontent {
+    flex: none;
+  }
+
+  .site-icon {
+    display: inline;
+    margin-right: 0.5rem;
+  }
+
+  .site-icon:last-child {
+    margin-right: 0;
   }
 
   .popup {

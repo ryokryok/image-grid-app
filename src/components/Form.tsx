@@ -56,14 +56,16 @@ export function InputCheckbox(props: InputCheckboxProps) {
   );
 }
 
-type ButtonProps = React.ComponentProps<"button"> & { primary?: boolean };
+type ButtonProps = React.ComponentProps<"button"> & {
+  primary: "primary" | "secondary";
+};
 
 export function Button(props: ButtonProps) {
   return (
     <button
       type="button"
       className={`popup-button ${
-        props.primary ? "button-primary" : "button-secondary"
+        props.primary === "primary" ? "button-primary" : "button-secondary"
       }`}
       {...props}
     ></button>
@@ -76,9 +78,8 @@ export function InputFileButton(props: InputFileButtonProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   return (
     <>
-      <button
-        className="popup-button button-primary"
-        type="button"
+      <Button
+        primary={"primary"}
         onClick={(event) => {
           event.preventDefault();
           if (fileRef.current) {
@@ -87,7 +88,7 @@ export function InputFileButton(props: InputFileButtonProps) {
         }}
       >
         {props.label}
-      </button>
+      </Button>
       <input type="file" className="popup-file" ref={fileRef} {...props} />
     </>
   );

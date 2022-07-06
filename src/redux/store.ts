@@ -7,6 +7,12 @@ export const store = configureStore({
     imageConfig: imageConfigReducer,
     popup: popupReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["imageConfig/setUrl"],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

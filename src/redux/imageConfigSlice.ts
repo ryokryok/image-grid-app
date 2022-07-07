@@ -27,14 +27,14 @@ export const imageConfigSlice = createSlice({
     updateWidth: (state: ImageConfigState, action: PayloadAction<string>) => {
       const updateValue = parseInt(action.payload) || 0;
       if (state.fixed) {
-        state.height = round((1 / state.aspectRatio) * updateValue, 2);
+        state.height = round((1 / state.aspectRatio) * updateValue, 0);
       }
       state.width = updateValue;
     },
     updateHeight: (state: ImageConfigState, action: PayloadAction<string>) => {
       const updateValue = parseInt(action.payload) || 0;
       if (state.fixed) {
-        state.width = round(state.aspectRatio * updateValue, 2);
+        state.width = round(state.aspectRatio * updateValue, 0);
       }
       state.height = updateValue;
     },
@@ -64,7 +64,7 @@ export const imageConfigSlice = createSlice({
       const aspectRatio = action.payload;
       state.aspectRatio = aspectRatio;
       if (state.fixed) {
-        state.width = round(state.height * aspectRatio, 2);
+        state.width = round(state.height * aspectRatio, 0);
       }
     },
   },
